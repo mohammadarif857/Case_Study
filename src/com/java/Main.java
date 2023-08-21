@@ -6,33 +6,36 @@ import java.util.*;
 public class Main {
 	public static void main(String[] args) {
 		Scanner sc=new Scanner(System.in);
-		int choice=-1,bookid;
-		String newbookname,newisbn;
+		int choice=-1,empid;
+		String newempname,newdept;
 		try {
-			//Establishing connection to database
+			
+			
 			Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl","scott","tiger");
 			System.out.println("Want to create new table Press 1: ");
 			int k=sc.nextInt();
 			if(k==1) {
-				// Drop table
+				
+				
 				try (Statement dropStat = con.createStatement()) {
 	                dropStat.execute("DROP TABLE books");
 	            } catch (SQLException ex) {
 	            }	
-				// Create table 
+				
+				
 		        try (Statement stat = con.createStatement()) {
-		        	String createTableSQL = "CREATE TABLE books (bookid number,bookname varchar(50),isbn varchar(20))";
+		        	String createTableSQL = "CREATE TABLE employee (empid number,empname varchar(50),dept varchar(20))";
 		                stat.execute(createTableSQL);
 		        }
 		    }
 			while(true) {
 				System.out.println("\n=========================================");
-				System.out.println("        Book Management System");
+				System.out.println("        Employee Management System");
 				System.out.println("=========================================");
-				System.out.println("1. Add a book");
-				System.out.println("2. List all books");
-				System.out.println("3. Delete a book");
-				System.out.println("4. Update a book");
+				System.out.println("1. Add a Employee");
+				System.out.println("2. List all Employee");
+				System.out.println("3. Delete a Employee");
+				System.out.println("4. Update a Employee");
 				System.out.println("5. Exit");
 				System.out.println("=========================================");
 				System.out.println("Enter your choice:(Integer Input) ");
@@ -45,93 +48,92 @@ public class Main {
 				
 				switch(choice) {
 				case 1:
-					//Adding a Book
-					System.out.println("Enter Id(int) ");
+										System.out.println("Enter Id(int) ");
 					if(sc.hasNextInt()) {
-						bookid=sc.nextInt();
+						empid=sc.nextInt();
 					}else {
 						System.out.println("Invalid Input..");
 						continue;
 					}
 					sc.nextLine();
-					System.out.println("Enter Book Name");
-					newbookname=sc.nextLine();
-					System.out.println("Enter ISBN:");
-					newisbn=sc.nextLine();
-					String sql="insert into books (bookid,bookname,isbn) values (?,?,?)";
+					System.out.println("Enter Employee Name");
+					newempname=sc.nextLine();
+					System.out.println("Enter Department:");
+					newdept=sc.nextLine();
+					String sql="insert into employee (empid,empname,dept) values (?,?,?)";
 					try(PreparedStatement stat=con.prepareStatement(sql)){
-						stat.setInt(1, bookid);
-						stat.setString(2, newbookname);
-						stat.setString(3, newisbn);
+						stat.setInt(1, empid);
+						stat.setString(2, newempname);
+						stat.setString(3, newdept);
 						stat.executeUpdate();
 					}
-					System.out.println("Book Added Successfully!!!");
+					System.out.println("Employee Added Successfully!!!");
 					break;
 				case 2:
-					//Listing all books
-					System.out.println("List of all Books :");
-					sql="select * from books";
+					
+					System.out.println("List of all Employee :");
+					sql="select * from employee";
 					try(PreparedStatement stat=con.prepareStatement(sql)){
 						ResultSet result=stat.executeQuery(sql);
 						while(result.next()) {
-							int id1=result.getInt("bookid");
-							String name=result.getString("bookname");
-							String isbn=result.getString("isbn");
-							System.out.println("Book id: "+id1+"Book name: "+name+"Book ISBN: "+isbn);
+							int id1=result.getInt("empid");
+							String name=result.getString("empname");
+							String dept=result.getString("dept");
+							System.out.println("Employee id: \t "+id1+"Employee name:\t "+name+"Department: "+dept);
 						}
 					}
 					break;
 				case 3:
-					//Deleting a book
-					System.out.println("Enter Book id to delete");
 					
-					if(sc.hasNextInt()) {
-						bookid=sc.nextInt();
+					System.out.println("Enter Employee id to delete");
+									if(sc.hasNextInt()) {
+						empid=sc.nextInt();
 					}else {
 						System.out.println("Invalid Input..");
 						continue;
 					}
 					sc.nextLine();
-					sql="delete from books where bookid=?";
+					sql="delete from employee where empid=?";
 					try(PreparedStatement stat=con.prepareStatement(sql)){
-						stat.setInt(1, bookid);
+						stat.setInt(1, empid);
 						int affectedrow=stat.executeUpdate();
 						if(affectedrow>0) {
-							System.out.println("Book Deleted!!");
+							System.out.println("Employee Deleted!!");
 						}else {
-							System.out.println("Book id not found");
+							System.out.println("Employee id not found");
 						}
 					}
 					break;
 				case 4:
-					//Updating book
+					
 					System.out.println("Enter ID to update");
 					if(sc.hasNextInt()) {
-						bookid=sc.nextInt();
+					   empid=sc.nextInt();
 					}else {
 						System.out.println("Invalid Input..");
 						continue;
 					}
 					sc.nextLine();
-					System.out.println("Enter new Book Name");
-					newbookname=sc.nextLine();
-					System.out.println("Enter new ISBN ");
-					newisbn=sc.nextLine();
-					sql="update books set bookname=?,isbn=? where bookid=?";
+					System.out.println("Enter new Employee Name");
+					newempname=sc.nextLine();
+					System.out.println("Enter new Department ");
+					newdept=sc.nextLine();
+					sql="update employee set empname=?,dept=? where empid=?";
 					try(PreparedStatement stat=con.prepareStatement(sql)){
-						stat.setString(1, newbookname);
-						stat.setString(2, newisbn);
-						stat.setInt(3, bookid);
+						stat.setString(1, newempname);
+						stat.setString(2, newdept);
+						stat.setInt(3, empid);
 						int affectedrow=stat.executeUpdate();
 						if(affectedrow>0) {
-							System.out.println("Book Updated!!");
+							System.out.println("Employee Updated!!");
 						}else {
-							System.out.println("Book id not found");
+							System.out.println("Employee id not found");
 						}
 					}
 					break;
 				case 5:
-					//Exiting Program
+					
+					
 					System.out.println("Exiting...");
 					con.close();
 					System.exit(0);

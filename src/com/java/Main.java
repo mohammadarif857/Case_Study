@@ -12,23 +12,8 @@ public class Main {
 			
 			
 			Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl","scott","tiger");
-			System.out.println("Want to create new table Press 1: ");
-			int k=sc.nextInt();
-			if(k==1) {
-				
-				
-				try (Statement dropStat = con.createStatement()) {
-	                dropStat.execute("DROP TABLE books");
-	            } catch (SQLException ex) {
-	            }	
-				
-				
-		        try (Statement stat = con.createStatement()) {
-		        	String createTableSQL = "CREATE TABLE employee (empid number,empname varchar(50),dept varchar(20))";
-		                stat.execute(createTableSQL);
-		        }
-		    }
-			while(true) {
+		    
+		while(true) {
 				System.out.println("\n=========================================");
 				System.out.println("        Employee Management System");
 				System.out.println("=========================================");
@@ -41,7 +26,7 @@ public class Main {
 				System.out.println("Enter your choice:(Integer Input) ");
 				if(sc.hasNextInt()) {
 					choice=sc.nextInt();
-				}else {
+				}else 
 					System.out.println("Invalid Input..");
 					break;
 				}
